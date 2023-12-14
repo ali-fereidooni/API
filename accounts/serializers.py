@@ -15,3 +15,19 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         del validated_data['password2']
         return User.objects.create_user(**validated_data)
+
+    def update(self, validated_data):
+        del validated_data['password2']
+        return User.objects.update(**validated_data)
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError('passwords must match')
+        return data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.validated_data['password'])
+        if commit:
+            user.save()
+        return user

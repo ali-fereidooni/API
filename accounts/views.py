@@ -6,6 +6,7 @@ from .serializers import UserRegisterSerializer
 
 
 class UserRegstrationView(APIView):
+
     def post(self, request):
         srz_data = UserRegisterSerializer(data=request.POST)
         if srz_data.is_valid():
