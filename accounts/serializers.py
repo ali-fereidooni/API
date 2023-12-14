@@ -3,6 +3,7 @@ from .models import User
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(required=True, write_only=True)
 
     class Meta:
         model = User
@@ -10,3 +11,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
+
+    def create(self, validated_data):
+        del validated_data['password2']
+        return User.objects.create_user(**validated_data)
