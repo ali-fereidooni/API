@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, OtpCode
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -31,3 +31,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if commit:
             user.save()
         return user
+
+
+class UserVerifyCode(serializers.ModelSerializer):
+    class Meta:
+        model = OtpCode
+        fields = ('phone_number', 'code')
