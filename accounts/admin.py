@@ -1,33 +1,27 @@
 from django.contrib import admin
-from .models import User, OtpCode
-from .forms import UserCreationForm, UserChangeForm
+from .models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 
 class UserAdmin(BaseUserAdmin):
-    form = UserCreationForm
-    add_form = UserChangeForm
-
-    list_display = ('email', 'phone_number', 'is_admin')
-    list_filter = ('is_admin',)
-    readonly_fields = ('last_login',)
-    fieldsets = (
-        ('Main', {'fields': ('email', 'phone_number', 'full_name', 'password')}),
-        ('Permissions', {'fields': ('is_active', 'is_admin',
-         'is_superuser', 'last_login', 'groups', 'user_permissions')}),
+    list_display = (
+        "phone", "first_name",
+        "last_name", "is_staff",
+        "author", "is_special_user",
     )
-    add_fieldsets = (
-        (None, {'fields': ('email', 'phone_number',
-         'full_name', 'password1', 'password2')}),
+    list_filter = (
+        "is_staff", "is_superuser",
+        "groups",
     )
-    search_fields = ('email', 'full_name')
-    ordering = ('full_name',)
-    filter_horizontal = ()
+    search_fields = (
+        "first_name", "last_name",
+        "phone",
+    )
+    ordering = (
+        "-is_superuser", "-is_staff",
+        "-pk",
+    )
+    list_per_page = 25
 
 
 admin.site.register(User, UserAdmin)
-
-
-@admin.register(OtpCode)
-class OtpCodeAdmin(admin.ModelAdmin):
-    list_display = ('phone_number', 'code', 'created')

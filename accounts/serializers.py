@@ -1,39 +1,27 @@
 from rest_framework import serializers
-from .models import User, OtpCode
+from .models import User
+from django.contrib.auth import get_user_model
 
 
-class UserRegisterSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(required=True, write_only=True)
-
+class UsersListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        exclude = ('last_login', 'is_admin', 'is_active', 'is_superuser')
-        extra_kwargs = {
-            'password': {'write_only': True},
-        }
-
-    def create(self, validated_data):
-        del validated_data['password2']
-        return User.objects.create_user(**validated_data)
-
-    def update(self, validated_data):
-        del validated_data['password2']
-        return User.objects.update(**validated_data)
-
-    def validate(self, data):
-        if data['password'] != data['password2']:
-            raise serializers.ValidationError('passwords must match')
-        return data
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.validated_data['password'])
-        if commit:
-            user.save()
-        return user
+        model = get_user_model()
+        fields = [
+            "id", "phone", "email", "author"
+            "first_name", "last_name",
+        ]
 
 
-class UserVerifyCode(serializers.ModelSerializer):
-    class Meta:
-        model = OtpCode
-        fields = ('phone_number', 'code')
+class AuthenticationSerializer(serializers.Serializer):
+    phone = serializers.CharField(
+        max_length=12,
+        min_length=12,
+    )
+
+    def validate_phone(self, value):
+        from re import match
+
+        if not match("^989\d{2}\s*?\d{3}\s*?\d{4}$", value):
+            raise serializers.ValidationError("Invalid phone number.")
+
+        return value
