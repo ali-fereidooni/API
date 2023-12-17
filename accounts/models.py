@@ -16,11 +16,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=100, blank=True)
     author = models.BooleanField(default=False, blank=True)
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'phone_number'
+    USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['email', 'full_name']
 
     def __str__(self):
@@ -36,7 +37,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return True
-
-    @property
-    def is_staff(self):
-        return self.is_admin

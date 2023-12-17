@@ -9,7 +9,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('you must have email')
         if not phone:
-            raise ValueError('you must have phone_number')
+            raise ValueError('you must have phone')
         user = self.model(email=email, phone=phone, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)

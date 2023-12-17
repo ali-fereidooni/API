@@ -1,13 +1,13 @@
 from kavenegar import *
 
 
-def send_otp_code(phone_number, code):
+def send_otp_code(phone, code):
     try:
         api = KavenegarAPI(
             '')
         params = {
             'sender': '',
-            'receptor': phone_number,
+            'receptor': phone,
             'message': f'کد تایید شما {code}',
         }
         response = api.sms_send(params)

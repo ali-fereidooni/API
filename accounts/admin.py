@@ -7,7 +7,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = (
         "phone", "first_name",
         "last_name", "is_staff",
-        "author", "is_special_user",
+        "author",
     )
     list_filter = (
         "is_staff", "is_superuser",
