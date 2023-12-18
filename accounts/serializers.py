@@ -12,6 +12,14 @@ class UsersListSerializer(serializers.ModelSerializer):
         ]
 
 
+class UserDetailUpdateDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = [
+            'password',
+        ]
+
+
 class AuthenticationSerializer(serializers.Serializer):
     phone = serializers.CharField(
         max_length=12,
