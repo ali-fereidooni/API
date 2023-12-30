@@ -8,6 +8,7 @@ from .serializers import (
     UsersListSerializer,
     UserDetailUpdateDeleteSerializer,
 )
+from rest_framework import status
 from utils import send_otp_code
 from psermissions import IsSuperUser
 from django.contrib.auth import get_user_model
@@ -20,23 +21,11 @@ class UserList(APIView):
         Returns a list of all existing users
     """
     serializer_class = UsersListSerializer
-    permission_classes = [IsSuperUser,]
-    filterset_fields = [
-        "author",
-    ]
-    search_fields = [
-        "phone",
-        "first_name",
-        "last_name",
-    ]
-    ordering_fields = (
-        "id", "author",
-    )
 
-    def get_queryset(self):
-        return get_user_model().objects.values(
-            'id', 'phone', 'first_name', 'last_name', 'author'
-        )
+    def get(self, request):
+        user = User.objects.all()
+        srz_data = self.serializer_class(instance=user, many=True).data
+        return Response(data=srz_data, status=status.HTTP_200_OK)
 
 
 class UserDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
