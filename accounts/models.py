@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=200, unique=True)
     phone_regex = RegexValidator(
-        regex=r"^989\d{2}\s*?\d{3}\s*?\d{4}$", message=_("Invalid phone number."),
+        regex=r"^09\d{2}\s*?\d{3}\s*?\d{4}$", message=_("Invalid phone number."),
     )
     phone = models.CharField(max_length=11, validators=[
         phone_regex], unique=True, verbose_name=_('phone'))
@@ -22,7 +22,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = ['email', 'full_name']
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return f'{self.email}'
@@ -37,3 +37,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return True
+
+
+class OtpCode(models.Model):
+    phone = models.CharField(max_length=11, unique=True)
+    code = models.PositiveSmallIntegerField()
+    created = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.phone} - {self.code} - {self.created}'

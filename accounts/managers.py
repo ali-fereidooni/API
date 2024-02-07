@@ -2,15 +2,14 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class UserManager(BaseUserManager):
-    def _create_user(self, email, phone, password, **extra_fields):
+    def _create_user(self, phone, password, **extra_fields):
         """
         Create and save a user with the given phone.
         """
-        if not email:
-            raise ValueError('you must have email')
+
         if not phone:
             raise ValueError('you must have phone')
-        user = self.model(email=email, phone=phone, **extra_fields)
+        user = self.model(phone=phone, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user

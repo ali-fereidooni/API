@@ -28,7 +28,7 @@ class UserList(APIView):
         return Response(data=srz_data, status=status.HTTP_200_OK)
 
 
-class UserDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
+class UserDetailUpdateDeleteView(APIView):
     """
     get:
         Returns the detail of a user instance.
@@ -47,15 +47,18 @@ class UserDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     """
 
     serializer_class = UserDetailUpdateDeleteSerializer
-    permission_classes = [
-        IsSuperUser,
-    ]
+    user_class = User.objects.filter()
 
-    def get_object(self):
-        pk = self.kwargs.get("pk")
-        user = get_object_or_404(User.objects.defer(
-            "password",
-        ),
-            pk=pk
-        )
-        return user
+    def get(self, request, *args, **kwargs):
+        user = self.user_class(pk=kwargs['pk'])
+        srz_data = self.serializer_class(instance=user).data
+        return Response(data=srz_data, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        user = self.user_class(pk=kwargs['pk'])
+        srz_data = self.serializer_class(instance=user)
+
+
+class UserRegisterView(APIView):
+    def post(self, request):
+        pass
