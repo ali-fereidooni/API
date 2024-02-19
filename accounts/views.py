@@ -47,11 +47,10 @@ class UserDetailUpdateDeleteView(APIView):
     """
 
     serializer_class = UserDetailUpdateDeleteSerializer
-    user_class = User.objects.filter()
 
     def get(self, request, *args, **kwargs):
-        user = self.user_class(pk=kwargs['pk'])
-        srz_data = self.serializer_class(instance=user).data
+        user = User.objects.get(pk=kwargs['pk'])
+        srz_data = self.serializer_class(instance=user, many=True).data
         return Response(data=srz_data, status=status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
